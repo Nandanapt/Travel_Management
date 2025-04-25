@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Booking</title>
+  <style>
+    /* Global styles for dark theme */
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 60%;
+      margin: auto;
+      padding: 30px;
+      background-color: #1c1c1c;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      background-color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    .price-info {
+      margin: 20px 0;
+      font-size: 1.2rem;
+      animation: fadeIn 1s ease;
+    }
+
+    .price-info p {
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #555;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .form-control:focus {
+      border-color: #ff6b6b;
+      outline: none;
+    }
+
+    .btn {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin: 10px 0;
+    }
+
+    .btn:hover {
+      background-color: #ff4757;
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .price-info p strong {
+      color: #ff6b6b;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Dark theme links */
+    a {
+      color: #ff6b6b;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Review Your Booking</h2>
+
+    <!-- Display the booking details -->
+    <div class="price-info">
+      <p><strong>From:</strong> {{ from_city }}</p>
+      <p><strong>To:</strong> {{ to_city }}</p>
+      <p><strong>Transport:</strong> {{ transport }}</p>
+      <p><strong>Base Price:</strong> ₹<span id="price" data-price="{{ price }}">{{ price }}</span></p>
+    </div>
+
+    <!-- Input to select number of people -->
+    <div class="form-group">
+      <label for="num_people">Number of People:</label>
+      <input type="number" id="num_people" name="num_people" value="1" min="1" max="10" class="form-control">
+    </div>
+
+    <!-- Dynamic price update -->
+    <div class="price-info">
+      <p><strong>Total Price:</strong> ₹<span id="total_price">{{ price }}</span></p>
+    </div>
+
+    <!-- Confirm and Pay button -->
+    <form action="/confirm_booking" method="POST">
+      <input type="hidden" name="from" value="{{ from_city }}">
+      <input type="hidden" name="to" value="{{ to_city }}">
+      <input type="hidden" name="transport" value="{{ transport }}">
+      <input type="hidden" name="base_price" value="{{ price }}">
+      <input type="hidden" name="total_price" id="total_price_input" value="{{ price }}">
+      <button type="submit" class="btn">Confirm & Pay</button>
+    </form>
+
+    <!-- Button to go back and edit booking -->
+    <a href="/" class="btn">← Edit Booking</a>
+  </div>
+
+  <script>
+    // Get the price from the data attribute in the HTML
+    var price = parseFloat(document.getElementById('price').getAttribute('data-price'));
+
+    // Update the total price when the number of people changes
+    document.getElementById('num_people').addEventListener('input', function() {
+      var numPeople = parseInt(this.value) || 1; // Default to 1 if input is invalid
+      var totalPrice = price * numPeople; // Calculate the total price
+      
+      // Update the total price display
+      document.getElementById('total_price').textContent = totalPrice;
+      
+      // Update the hidden input value for total price
+      document.getElementById('total_price_input').value = totalPrice;
+    });
+  </script>
+  <footer style="
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ccc;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  z-index: 999;
+">
+    &copy; {{ 2025 }} NexusTravel Nandana. All rights reserved.
+</footer>
+
+</body>
+</html>

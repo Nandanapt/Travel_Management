@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Booking Successful - TravelX</title>
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+        rel="stylesheet"
+    />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1350&q=80')
+                no-repeat center center/cover;
+            height: auto; /* Changed to auto to accommodate more content */
+            overflow-x: hidden;
+            position: relative;
+            color: #ffffff;
+            padding-bottom: 80px; /* Add padding for the fixed footer */
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 100px auto 40px; /* Added margin-bottom */
+            background: rgba(20, 20, 20, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00ffcc;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        .booking-details {
+            text-align: left;
+            margin-bottom: 30px;
+            color: #eee;
+        }
+
+        .booking-details p {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .booking-details strong {
+            color: #00ffcc;
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            text-align: center;
+            color: #bbb;
+        }
+
+        .contact-info h2 {
+            font-size: 1.5rem;
+            color: #00ffcc;
+            margin-bottom: 15px;
+        }
+
+        .contact-info p {
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .print-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #00ffcc;
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .print-button:hover {
+            background-color: #00cc99;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #ff4757;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media print {
+            body, body::before {
+                background: white !important;
+                color: black !important;
+            }
+            .container {
+                background: white !important;
+                color: black !important;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .print-button, .back-button {
+                display: none !important;
+            }
+            h1, .contact-info h2 {
+                color: black !important;
+            }
+            .booking-details strong, .contact-info strong {
+                color: black !important;
+            }
+            .contact-info {
+                border-top: 1px solid black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" data-aos="zoom-in">
+        <h1>Booking Successful!</h1>
+        <p class="message">Thank you for booking with TravelX! Happy journey!</p>
+
+        <div class="booking-details">
+            <h2>Your Booking Details:</h2>
+            <p><strong>Booking Time:</strong> {{ date_time }}</p>
+            <p><strong>From:</strong> {{ from_city }}</p>
+            <p><strong>To:</strong> {{ to_city }}</p>
+            <p><strong>Transport:</strong> {{ transport }}</p>
+            <p><strong>Total Price:</strong> ₹{{ price }}</p>
+        </div>
+
+        <button onclick="window.print()" class="print-button">Print Ticket</button>
+        <a href="/index" class="back-button" data-aos="fade-up" data-aos-delay="300">Back to Home</a>
+
+        <div class="contact-info">
+            <h2>Need Assistance?</h2>
+            <p><strong>Email:</strong> support@travelx.com</p>
+            <p><strong>Phone:</strong> +91 987654321</p>
+            <p>Our team is available 24/7 to assist you with any enquiries.</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>AOS.init({ duration: 800, once: true });</script>
+</body>
+<footer style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ccc;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    z-index: 999;
+">
+     &copy; {{ 2025 }} NexusTravel Nandana. All rights reserved.
+</footer>
+
+</html>

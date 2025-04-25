@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payment - TravelX</title>
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+        rel="stylesheet"
+    />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+
+    <style>
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80')
+                        no-repeat center center/cover;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            color: #ffffff;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 0;
+        }
+
+        .form-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 40px 30px;
+            background: rgba(30,30,30,0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            transform: translateY(-20px);
+            animation: dropIn 1s ease-out forwards;
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #00ffcc;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #1e1e1e;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group.full input,
+        .form-group.full .flatpickr-input {
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            transform: scale(1.02);
+            box-shadow: 0 0 8px rgba(0,255,204,0.5);
+        }
+
+        .payment-option {
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #ff6b6b;
+            color: #ffffff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn:hover {
+            background-color: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,71,87,0.4);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            color: #00ffcc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .back-link:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-wrapper" data-aos="zoom-in">
+        <h2>Make Your Payment</h2>
+
+        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">
+            You are booking a trip from {{ from_city }} to {{ to_city }} by {{ transport }}.
+            The total amount is: ₹{{ total_amount }}
+        </p>
+
+        <div class="payment-option">
+            <input type="radio" id="credit-card" name="payment-method" value="credit-card" checked>
+            <label for="credit-card">Credit Card</label>
+        </div>
+
+        <div id="credit-card-form">
+            <form action="/payment" method="POST"> <input type="hidden" name="price" value="{{ total_amount }}" />
+                <input type="hidden" name="from" value="{{ from_city }}">
+                <input type="hidden" name="to" value="{{ to_city }}">
+                <input type="hidden" name="transport" value="{{ transport }}">
+
+                <div class="form-group full" data-aos="fade-up" data-aos-delay="200">
+                    <input type="text" name="card_name" placeholder="Cardholder's Name" required />
+                </div>
+                <div class="form-group full" data-aos="fade-up" data-aos-delay="300">
+                    <input type="text" name="card_number" placeholder="Card Number" required />
+                </div>
+                <div class="form-group time-picker" data-aos="fade-up" data-aos-delay="400">
+                    <input type="number" name="expiry_month" min="1" max="12" placeholder="MM" required />
+                    <input type="number" name="expiry_year" min="{{ current_year }}" placeholder="YYYY" required />
+                </div>
+                <div class="form-group full" data-aos="fade-up" data-aos-delay="500">
+                    <input type="number" name="cvv" placeholder="CVV" required />
+                </div>
+                <button class="btn" type="submit" data-aos="fade-up" data-aos-delay="600">
+                    Confirm Payment
+                </button>
+            </form>
+        </div>
+
+        <div class="payment-option">
+            <input type="radio" id="gpay" name="payment-method" value="gpay">
+            <label for="gpay">Google Pay</label>
+        </div>
+
+        <div id="gpay-form" style="display: none;">
+            <form action="/payment" method="POST"> <input type="hidden" name="price" value="{{ total_amount }}" />
+                <input type="hidden" name="from" value="{{ from_city }}">
+                <input type="hidden" name="to" value="{{ to_city }}">
+                <input type="hidden" name="transport" value="{{ transport }}">
+                <div class="form-group full" data-aos="fade-up" data-aos-delay="300">
+                    <input type="text" name="gpay_phone" placeholder="Enter your phone number to proceed" required />
+                </div>
+                <button class="btn" type="submit" data-aos="fade-up" data-aos-delay="600">
+                    Pay with Google Pay
+                </button>
+            </form>
+        </div>
+
+        <div class="payment-option">
+            <input type="radio" id="phonepe" name="payment-method" value="phonepe">
+            <label for="phonepe">PhonePe</label>
+        </div>
+
+        <div id="phonepe-form" style="display: none;">
+            <form action="/payment" method="POST"> <input type="hidden" name="price" value="{{ total_amount }}" />
+                <input type="hidden" name="from" value="{{ from_city }}">
+                <input type="hidden" name="to" value="{{ to_city }}">
+                <input type="hidden" name="transport" value="{{ transport }}">
+                <div class="form-group full" data-aos="fade-up" data-aos-delay="300">
+                    <input type="text" name="phonepe_phone" placeholder="Enter your phone number to proceed" required />
+                </div>
+                <button class="btn" type="submit" data-aos="fade-up" data-aos-delay="600">
+                    Pay with PhonePe
+                </button>
+            </form>
+        </div>
+
+
+        <a href="/index" class="back-link" data-aos="fade-up" data-aos-delay="700">
+            ← Back to Home
+        </a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Show respective payment forms based on selected option
+        document.querySelectorAll('input[name="payment-method"]').forEach((radio) => {
+            radio.addEventListener('change', function() {
+                document.getElementById('credit-card-form').style.display = 'none';
+                document.getElementById('gpay-form').style.display = 'none';
+                document.getElementById('phonepe-form').style.display = 'none';
+
+                if (this.value === 'credit-card') {
+                    document.getElementById('credit-card-form').style.display = 'block';
+                } else if (this.value === 'gpay') {
+                    document.getElementById('gpay-form').style.display = 'block';
+                } else if (this.value === 'phonepe') {
+                    document.getElementById('phonepe-form').style.display = 'block';
+                }
+            });
+        });
+    </script>
+    <footer style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ccc;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    z-index: 999;
+    ">
+         &copy; {{ 2025 }} NexusTravel Nandana. All rights reserved.
+    </footer>
+
+</body>
+</html>
